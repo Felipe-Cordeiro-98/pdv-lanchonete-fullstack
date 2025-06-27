@@ -7,7 +7,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 export default function PageHeader({ title, buttonText, handleChange, handleClick, searchValue, isLoading }) {
     return (
-        <div className="w-full h-12 flex justify-between items-center px-6 mt-10">
+        <div className="w-full h-12 flex justify-between items-center px-6 my-10">
             <div className="h-full flex items-center">
                 <h2 className="mr-9 text-2xl text-white font-semibold">{title}</h2>
                 <Paper
