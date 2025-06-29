@@ -50,7 +50,7 @@ export default function ProductPage() {
     };
 
     const handleDeleteClick = () => {
-        api.delete(`/products/${selectedItem.id}`)
+        api.delete(`/products/${selectedItem.id}`);
         alert("Produto '" + selectedItem.name + "' deletado");
         setOpen(false);
         fetchProducts();
@@ -87,96 +87,117 @@ export default function ProductPage() {
                 isLoading={isLoading}
             />
             <div className="h-[calc(100%-88px)] my-10">
-                <Paper sx={{ width: "100%", height: "100%" }}>
-                    <TableContainer sx={{ maxHeight: 440, height: "calc(100% - 52px)", backgroundColor: "#5A6169" }}>
-                        <Table stickyHeader>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell sx={{ fontWeight: "bold", color: "white", backgroundColor: "#2C2C2C" }}>
-                                        Id
-                                    </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            fontWeight: "bold",
-                                            color: "white",
-                                            minWidth: "200px",
-                                            backgroundColor: "#2C2C2C",
-                                        }}
-                                    >
-                                        Produto
-                                    </TableCell>
-                                    <TableCell sx={{ fontWeight: "bold", color: "white", backgroundColor: "#2C2C2C" }}>
-                                        Preço
-                                    </TableCell>
-                                    <TableCell sx={{ fontWeight: "bold", color: "white", backgroundColor: "#2C2C2C" }}>
-                                        Quantidade
-                                    </TableCell>
-                                    <TableCell sx={{ fontWeight: "bold", color: "white", backgroundColor: "#2C2C2C" }}>
-                                        Categoria
-                                    </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            fontWeight: "bold",
-                                            textAlign: "center",
-                                            color: "white",
-                                            backgroundColor: "#2C2C2C",
-                                        }}
-                                    >
-                                        Ações
-                                    </TableCell>
-                                </TableRow>
-                            </TableHead>
-
-                            <TableBody>
-                                {products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item) => (
-                                    <TableRow key={item.id} sx={{ backgroundColor: "#EDEEF0" }}>
-                                        <TableCell>{item.id}</TableCell>
-                                        <TableCell>{item.name}</TableCell>
-                                        <TableCell>{item.price}</TableCell>
-                                        <TableCell>{item.stockQuantity}</TableCell>
-                                        <TableCell>{item.categoryId}</TableCell>
-                                        <TableCell sx={{ textAlign: "center" }}>
-                                            <Tooltip title="Clique para editar">
-                                                <IconButton aria-label="edit" onClick={() => handleEditClick(item)}>
-                                                    <EditRoundedIcon />
-                                                </IconButton>
-                                            </Tooltip>
-
-                                            <Tooltip title="Clique para excluir">
-                                                <IconButton aria-label="delete" onClick={() => showModal(item)}>
-                                                    <DeleteRoundedIcon />
-                                                </IconButton>
-                                            </Tooltip>
+                {products.length > 0 ? (
+                    <Paper sx={{ width: "100%", height: "100%" }}>
+                        <TableContainer
+                            sx={{ maxHeight: 440, height: "calc(100% - 52px)", backgroundColor: "#5A6169" }}
+                        >
+                            <Table stickyHeader>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell
+                                            sx={{ fontWeight: "bold", color: "white", backgroundColor: "#2C2C2C" }}
+                                        >
+                                            Id
+                                        </TableCell>
+                                        <TableCell
+                                            sx={{
+                                                fontWeight: "bold",
+                                                color: "white",
+                                                minWidth: "200px",
+                                                backgroundColor: "#2C2C2C",
+                                            }}
+                                        >
+                                            Produto
+                                        </TableCell>
+                                        <TableCell
+                                            sx={{ fontWeight: "bold", color: "white", backgroundColor: "#2C2C2C" }}
+                                        >
+                                            Preço
+                                        </TableCell>
+                                        <TableCell
+                                            sx={{ fontWeight: "bold", color: "white", backgroundColor: "#2C2C2C" }}
+                                        >
+                                            Quantidade
+                                        </TableCell>
+                                        <TableCell
+                                            sx={{ fontWeight: "bold", color: "white", backgroundColor: "#2C2C2C" }}
+                                        >
+                                            Categoria
+                                        </TableCell>
+                                        <TableCell
+                                            sx={{
+                                                fontWeight: "bold",
+                                                textAlign: "center",
+                                                color: "white",
+                                                backgroundColor: "#2C2C2C",
+                                            }}
+                                        >
+                                            Ações
                                         </TableCell>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[10, 25, 100]}
-                        component="div"
-                        count={products.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                        labelRowsPerPage="Linhas por página"
-                        labelDisplayedRows={({ from, to, count }) =>
-                            `${from}–${to} de ${count !== -1 ? count : `mais de ${to}`}`
-                        }
-                        sx={{
-                            backgroundColor: "#2C2C2C",
-                            color: "white",
-                            ".MuiSelect-icon": {
+                                </TableHead>
+
+                                <TableBody>
+                                    {products
+                                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                        .map((item) => (
+                                            <TableRow key={item.id} sx={{ backgroundColor: "#EDEEF0" }}>
+                                                <TableCell>{item.id}</TableCell>
+                                                <TableCell>{item.name}</TableCell>
+                                                <TableCell>{item.price}</TableCell>
+                                                <TableCell>{item.stockQuantity}</TableCell>
+                                                <TableCell>{item.categoryId}</TableCell>
+                                                <TableCell sx={{ textAlign: "center" }}>
+                                                    <Tooltip title="Clique para editar">
+                                                        <IconButton
+                                                            aria-label="edit"
+                                                            onClick={() => handleEditClick(item)}
+                                                        >
+                                                            <EditRoundedIcon />
+                                                        </IconButton>
+                                                    </Tooltip>
+
+                                                    <Tooltip title="Clique para excluir">
+                                                        <IconButton aria-label="delete" onClick={() => showModal(item)}>
+                                                            <DeleteRoundedIcon />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <TablePagination
+                            rowsPerPageOptions={[10, 25, 100]}
+                            component="div"
+                            count={products.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            labelRowsPerPage="Linhas por página"
+                            labelDisplayedRows={({ from, to, count }) =>
+                                `${from}–${to} de ${count !== -1 ? count : `mais de ${to}`}`
+                            }
+                            sx={{
+                                backgroundColor: "#2C2C2C",
                                 color: "white",
-                            },
-                            ".Mui-disabled": {
-                                color: "#7C7C7C",
-                            },
-                        }}
-                    />
-                </Paper>
+                                ".MuiSelect-icon": {
+                                    color: "white",
+                                },
+                                ".Mui-disabled": {
+                                    color: "#7C7C7C",
+                                },
+                            }}
+                        />
+                    </Paper>
+                ) : (
+                    <div className="w-full h-full flex justify-center items-center">
+                        <p className="text-gray-600">Nenhum produto adicionado.</p>
+                    </div>
+                )}
             </div>
             <ModalDelete
                 open={open}
