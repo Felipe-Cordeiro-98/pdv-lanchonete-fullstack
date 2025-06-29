@@ -5,40 +5,35 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
-export default function PageHeader({ title, buttonText, handleChange, handleClick, searchValue, isLoading }) {
+export default function PageHeader({ title, buttonText, handleChange, handleClick, searchValue, placeholderInput, isLoading }) {
     return (
-        <div className="w-full h-12 flex justify-between items-center px-6 my-10">
+        <div className="h-12 flex justify-between items-center">
             <div className="h-full flex items-center">
                 <h2 className="mr-9 text-2xl text-white font-semibold">{title}</h2>
                 <Paper
                     component="form"
-                    onSubmit={(event) => event.preventDefault()}
                     sx={{
-                        p: "2px 4px",
                         display: "flex",
                         alignItems: "center",
-                        width: 400,
+                        width: 300,
                         height: 35,
                         backgroundColor: "#2C2C2C",
+                        px: 1,
+                        py: 0.5,
                         borderRadius: "25px",
                     }}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                    }}
                 >
-                    <IconButton type="button" sx={{ p: "10px", color: "white" }} aria-label="search">
-                        <SearchIcon />
+                    <IconButton type="submit" sx={{ p: "8px" }} aria-label="search">
+                        <SearchIcon sx={{ color: "#C8C8C8" }} />
                     </IconButton>
                     <InputBase
-                        sx={{
-                            mx: 1,
-                            flex: 1,
-                            color: "white",
-                            "::placeholder": {
-                                color: "white",
-                            },
-                        }}
-                        placeholder="Buscar"
-                        inputProps={{ "aria-label": "search products" }}
-                        onChange={handleChange}
+                        sx={{ ml: 1, flex: 1, color: "#C8C8C8" }}
+                        placeholder={placeholderInput}
                         value={searchValue}
+                        onChange={handleChange}
                     />
                 </Paper>
             </div>
