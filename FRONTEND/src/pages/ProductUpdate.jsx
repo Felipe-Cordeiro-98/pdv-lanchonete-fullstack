@@ -24,14 +24,12 @@ export default function ProductUpdate() {
                 categoryId: data.categoryId,
             });
             alert("Produto atualizado com sucesso!");
-            navigate("/products"); // volta para listagem
+            navigate("/products");
         } catch (error) {
             console.error("Erro ao atualizar produto", error);
             alert("Erro ao atualizar produto.");
         }
     };
-
-    // if (!product || categories.length === 0) return <p>Carregando...</p>;
 
     return (
         <div className="container h-full">

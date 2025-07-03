@@ -15,7 +15,6 @@ export default function ProductCreate() {
 
     const handleSave = async (data) => {
         try {
-            console.log(data)
             await api.post("/products", {
                 name: data.name,
                 price: data.price,
