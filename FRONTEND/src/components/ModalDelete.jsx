@@ -11,6 +11,8 @@ export default function ModalDelete({ open, onClose, onDelete, itemName }) {
                     sx: {
                         backgroundColor: "#191A19",
                         borderRadius: 2,
+                        minWidth: 450,
+                        padding: "12px"
                     },
                 },
             }}
