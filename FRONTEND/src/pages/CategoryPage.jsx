@@ -1,7 +1,3 @@
-import PageHeader from "../components/PageHeader";
-import { useEffect, useState } from "react";
-import ModalDelete from "../components/ModalDelete";
-import { useNavigate } from "react-router-dom";
 import {
     IconButton,
     Paper,
@@ -14,51 +10,90 @@ import {
     TableRow,
     Tooltip,
 } from "@mui/material";
+
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 
+import PageHeader from "../components/PageHeader";
+import ModalDelete from "../components/ModalDelete";
+import ModalCategory from "../components/ModalCategory";
+
+import { useEffect, useState } from "react";
 import api from "../services/api";
 
-export default function ProductPage() {
+export default function CategoryPage() {
     const [isLoading, setIsloading] = useState(false);
     const [searchInput, setSearchInput] = useState("");
-    const [open, setOpen] = useState(false);
+    const [openModalDelete, setOpenModalDelete] = useState(false);
+    const [openModalCategory, setOpenModalCategory] = useState(false);
+    const [categoryName, setCategoryName] = useState("");
+    const [isEdit, setIsEdit] = useState(false);
+    const [editCategoryId, setEditCategoryId] = useState(null);
     const [selectedItem, setSelectedItem] = useState(null);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [products, setProducts] = useState([]);
-
-    const navigate = useNavigate();
+    const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        fetchProducts();
+        fetchCategories();
     }, []);
 
-    const fetchProducts = async () => {
+    const fetchCategories = async () => {
         await api
-            .get("/products")
-            .then((res) => setProducts(res.data.content))
-            .catch((error) => console.error("Erro ao buscar produtos", error));
+            .get("/categories")
+            .then((res) => setCategories(res.data))
+            .catch((error) => console.error("Erro ao buscar categorias", error));
+    };
+
+    const handleSaveCategory = async () => {
+        if (!categoryName.trim()) return;
+
+        try {
+            if (isEdit) {
+                await api.put(`/categories/${editCategoryId}`, {
+                    name: categoryName.trim(),
+                });
+            } else {
+                await api.post("/categories", {
+                    name: categoryName.trim(),
+                });
+            }
+
+            setCategoryName("");
+            setEditCategoryId(null);
+            setIsEdit(false);
+            setOpenModalCategory(false);
+
+            fetchCategories();
+        } catch (error) {
+            console.error("Erro ao salvar categoria:", error);
+        }
     };
 
     const handleCreateClick = () => {
-        navigate("/products/create");
+        setCategoryName("");
+        setEditCategoryId(null);
+        setIsEdit(false);
+        setOpenModalCategory(true);
     };
 
     const handleEditClick = (item) => {
-        navigate(`/products/update/${item.id}`);
+        setCategoryName(item.name);
+        setEditCategoryId(item.id);
+        setIsEdit(true);
+        setOpenModalCategory(true);
     };
 
     const handleDeleteClick = () => {
-        api.delete(`/products/${selectedItem.id}`);
-        alert("Produto '" + selectedItem.name + "' deletado");
-        setOpen(false);
-        fetchProducts();
+        api.delete(`/categories/${selectedItem.id}`);
+        alert("Categoria '" + selectedItem.name + "' deletado");
+        setOpenModalDelete(false);
+        fetchCategories();
     };
 
-    const showModal = (item) => {
+    const showModalDelete = (item) => {
         setSelectedItem(item);
-        setOpen(true);
+        setOpenModalDelete(true);
     };
 
     const handleSearchInput = (event) => {
@@ -74,20 +109,19 @@ export default function ProductPage() {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
-
     return (
         <div className="h-screen py-10 px-6">
             <PageHeader
-                title="Produtos"
-                buttonText="Produto"
+                title="Categoria"
+                buttonText="Categoria"
                 handleChange={handleSearchInput}
                 handleClick={handleCreateClick}
-                placeholderInput="Buscar produto"
+                placeholderInput="Buscar categoria"
                 searchValue={searchInput}
                 isLoading={isLoading}
             />
             <div className="h-[calc(100%-88px)] my-10">
-                {products.length > 0 ? (
+                {categories.length > 0 ? (
                     <Paper sx={{ width: "100%", height: "100%" }}>
                         <TableContainer
                             sx={{ maxHeight: 440, height: "calc(100% - 52px)", backgroundColor: "#5A6169" }}
@@ -108,21 +142,6 @@ export default function ProductPage() {
                                                 backgroundColor: "#2C2C2C",
                                             }}
                                         >
-                                            Produto
-                                        </TableCell>
-                                        <TableCell
-                                            sx={{ fontWeight: "bold", color: "white", backgroundColor: "#2C2C2C" }}
-                                        >
-                                            Preço
-                                        </TableCell>
-                                        <TableCell
-                                            sx={{ fontWeight: "bold", color: "white", backgroundColor: "#2C2C2C" }}
-                                        >
-                                            Quantidade
-                                        </TableCell>
-                                        <TableCell
-                                            sx={{ fontWeight: "bold", color: "white", backgroundColor: "#2C2C2C" }}
-                                        >
                                             Categoria
                                         </TableCell>
                                         <TableCell
@@ -139,20 +158,13 @@ export default function ProductPage() {
                                 </TableHead>
 
                                 <TableBody>
-                                    {products
+                                    {categories
                                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                        .sort((a, b) => a.id - b.id)
                                         .map((item) => (
                                             <TableRow key={item.id} sx={{ backgroundColor: "#EDEEF0" }}>
                                                 <TableCell>{item.id}</TableCell>
                                                 <TableCell>{item.name}</TableCell>
-                                                <TableCell>
-                                                    {item.price.toLocaleString("pt-BR", {
-                                                        style: "currency",
-                                                        currency: "BRL",
-                                                    })}
-                                                </TableCell>
-                                                <TableCell>{item.stockQuantity}</TableCell>
-                                                <TableCell>{item.categoryId}</TableCell>
                                                 <TableCell sx={{ textAlign: "center" }}>
                                                     <Tooltip title="Clique para editar">
                                                         <IconButton
@@ -164,7 +176,10 @@ export default function ProductPage() {
                                                     </Tooltip>
 
                                                     <Tooltip title="Clique para excluir">
-                                                        <IconButton aria-label="delete" onClick={() => showModal(item)}>
+                                                        <IconButton
+                                                            aria-label="delete"
+                                                            onClick={() => showModalDelete(item)}
+                                                        >
                                                             <DeleteRoundedIcon />
                                                         </IconButton>
                                                     </Tooltip>
@@ -177,7 +192,7 @@ export default function ProductPage() {
                         <TablePagination
                             rowsPerPageOptions={[10, 25, 100]}
                             component="div"
-                            count={products.length}
+                            count={categories.length}
                             rowsPerPage={rowsPerPage}
                             page={page}
                             onPageChange={handleChangePage}
@@ -200,15 +215,29 @@ export default function ProductPage() {
                     </Paper>
                 ) : (
                     <div className="w-full h-full flex justify-center items-center">
-                        <p className="text-gray-600">Nenhum produto adicionado.</p>
+                        <p className="text-gray-600">Nenhuma categoria adicionada.</p>
                     </div>
                 )}
             </div>
+            <ModalCategory
+                open={openModalCategory}
+                onClose={() => {
+                    setOpenModalCategory(false);
+                    setCategoryName("");
+                    setEditCategoryId(null);
+                    setIsEdit(false);
+                }}
+                onSave={handleSaveCategory}
+                categoryName={categoryName}
+                setCategoryName={setCategoryName}
+                isEdit={isEdit}
+                categoryId={editCategoryId}
+            />
             <ModalDelete
-                open={open}
-                onClose={() => setOpen(false)}
+                open={openModalDelete}
+                onClose={() => setOpenModalDelete(false)}
                 onDelete={handleDeleteClick}
-                itemName={selectedItem?.name ?? "Produto"}
+                itemName={selectedItem?.name ?? "Categoria"}
             />
         </div>
     );
