@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import ProductFormPage from "../components/ProductFormPage";
 import api from "../services/api";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function ProductUpdate() {
     const { id } = useParams();
@@ -23,11 +24,14 @@ export default function ProductUpdate() {
                 stockQuantity: data.stockQuantity,
                 categoryId: data.categoryId,
             });
-            alert("Produto atualizado com sucesso!");
-            navigate("/products");
+            toast.success("Produto atualizado com sucesso!", {
+                onClose: () => navigate("/products"),
+            });
         } catch (error) {
             console.error("Erro ao atualizar produto", error);
-            alert("Erro ao atualizar produto.");
+            toast.error("Erro ao atualizar produto.", {
+                autoClose: 2000,
+            });
         }
     };
 
@@ -39,6 +43,18 @@ export default function ProductUpdate() {
                 categories={categories}
                 handleForm={handleSave}
                 params={id}
+            />
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
             />
         </div>
     );
