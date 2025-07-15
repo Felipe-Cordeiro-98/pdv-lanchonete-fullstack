@@ -1,62 +1,45 @@
-import Paper from "@mui/material/Paper";
-import InputBase from "@mui/material/InputBase";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
 import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import InputSearch from "./InputSearch";
 
-export default function PageHeader({ title, buttonText, handleChange, handleClick, searchValue, placeholderInput, isLoading }) {
+export default function PageHeader({ pageTitle, inputPlaceholder, inputChange, inputValue, handleButtonClick }) {
+    const HeaderButton = () => (
+        <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={handleButtonClick}
+            sx={{
+                height: "35px",
+                padding: "4px 14px",
+                borderRadius: "32px",
+                textTransform: "none",
+                backgroundColor: "#8946A6",
+                "&.Mui-disabled": {
+                    backgroundColor: "#54346B",
+                    color: "#606060",
+                },
+            }}
+        >
+            {pageTitle}
+        </Button>
+    );
+
     return (
-        <div className="h-12 flex justify-between items-center">
-            <div className="h-full flex items-center">
-                <h2 className="mr-9 text-2xl text-white font-semibold">{title}</h2>
-                <Paper
-                    component="form"
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        width: 300,
-                        height: 35,
-                        backgroundColor: "#2C2C2C",
-                        px: 1,
-                        py: 0.5,
-                        borderRadius: "25px",
-                    }}
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                    }}
-                >
-                    <IconButton type="submit" sx={{ p: "8px" }} aria-label="search">
-                        <SearchIcon sx={{ color: "#C8C8C8" }} />
-                    </IconButton>
-                    <InputBase
-                        sx={{ ml: 1, flex: 1, color: "#C8C8C8" }}
-                        placeholder={placeholderInput}
-                        value={searchValue}
-                        onChange={handleChange}
-                    />
-                </Paper>
+        <div className="md:h-[100px] md:flex-row md:justify-normal h-[130px] flex flex-col justify-evenly px-5">
+            <div className="flex justify-between items-center">
+                <h1 className="text-white font-semibold text-2xl">{pageTitle}</h1>
+                <div className="md:hidden">
+                    <HeaderButton />
+                </div>
             </div>
-            <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                size="medium"
-                loadingPosition="start"
-                loading={isLoading}
-                onClick={handleClick}
-                sx={{
-                    backgroundColor: "#8946A6",
-                    borderRadius: "25px",
-                    height: "35px",
-                    textTransform: "none",
-                    "&.Mui-disabled": {
-                        backgroundColor: "#54346B",
-                        color: "#606060",
-                    },
-                }}
-            >
-                {buttonText}
-            </Button>
+            <div className="md:w-full md:flex md:justify-between md:items-center md:pl-5">
+                <div className="md:max-w-[400px] md:w-full">
+                    <InputSearch placeholder={inputPlaceholder} onChange={inputChange} value={inputValue} />
+                </div>
+                <div className="md:block hidden">
+                    <HeaderButton />
+                </div>
+            </div>
         </div>
     );
 }
