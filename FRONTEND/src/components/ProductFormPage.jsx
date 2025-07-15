@@ -13,14 +13,13 @@ export default function ProductFormPage({ title, product, categories, handleForm
         reset,
     } = useForm();
 
-    
     useEffect(() => {
         if (product) {
             reset({
                 name: product.name,
                 price: product.price.toFixed(2),
                 stockQuantity: product.stockQuantity,
-                categoryId: product.categoryId,
+                categoryId: product.category.id,
             });
         }
     }, [product, reset]);
@@ -114,7 +113,7 @@ export default function ProductFormPage({ title, product, categories, handleForm
                             >
                                 <option value="">Selecione uma categoria</option>
                                 {categories.map((cat) => (
-                                    <option key={cat.id} value={String(cat.id)}>
+                                    <option key={cat.id} value={cat.id}>
                                         {cat.name}
                                     </option>
                                 ))}
