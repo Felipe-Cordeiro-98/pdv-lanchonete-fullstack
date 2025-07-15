@@ -1,11 +1,13 @@
 import { Routes, Route } from "react-router-dom";
-import LayoutPage from "../components/LayoutPage";
-import SalePage from "../pages/SalePage";
+import LayoutPage from "../layouts/LayoutPage";
+
 import ProductPage from "../pages/ProductPage";
-import CategoryPage from "../pages/CategoryPage";
-import ReportPage from "../pages/ReportPage";
 import ProductCreate from "../pages/ProductCreate";
 import ProductUpdate from "../pages/ProductUpdate";
+
+import CategoryPage from "../pages/CategoryPage";
+import SalePage from "../pages/SalePage";
+import ReportPage from "../pages/ReportPage";
 
 export default function AppRoutes() {
     return (
