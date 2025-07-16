@@ -21,6 +21,7 @@
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.58.1",
     "react-infinite-scroll-component": "^6.1.0",
+    "react-number-format": "^5.4.4",
     "react-router-dom": "^7.6.2",
     "react-toastify": "^11.0.5"
   },
