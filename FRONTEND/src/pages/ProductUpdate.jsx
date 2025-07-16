@@ -1,22 +1,42 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import ProductFormPage from "../components/ProductFormPage";
+import ProductForm from "../components/ProductForm";
 import api from "../services/api";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function ProductUpdate() {
+    const [product, setProduct] = useState(null);
+    const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(false);
+
     const { id } = useParams();
     const navigate = useNavigate();
 
-    const [product, setProduct] = useState(null);
-    const [categories, setCategories] = useState([]);
-
     useEffect(() => {
-        api.get(`/products/${id}`).then((res) => setProduct(res.data));
-        api.get("/categories").then((res) => setCategories(res.data));
+        fetchProductId(id);
+        fetchCategories();
     }, [id]);
 
-    const handleSave = async (data) => {
+    const fetchProductId = async (id) => {
+        try {
+            const res = await api.get(`products/${id}`);
+            setProduct(res.data);
+        } catch (error) {
+            console.error("Erro ao buscar produto por id", error);
+        }
+    };
+
+    const fetchCategories = async () => {
+        try {
+            const res = await api.get("categories");
+            setCategories(res.data);
+        } catch (error) {
+            console.error("Erro ao buscar categorias", error);
+        }
+    };
+
+    const handleUpdateProduct = async (data) => {
+        setLoading(true);
         try {
             await api.put(`/products/${id}`, {
                 name: data.name,
@@ -32,17 +52,20 @@ export default function ProductUpdate() {
             toast.error("Erro ao atualizar produto.", {
                 autoClose: 2000,
             });
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="container h-full">
-            <ProductFormPage
-                title="Atualizar Produto"
+        <div className="h-full">
+            <ProductForm
+                pageTitle="Atualizar Produto"
                 product={product}
                 categories={categories}
-                handleForm={handleSave}
+                handleForm={handleUpdateProduct}
                 params={id}
+                loading={loading}
             />
             <ToastContainer
                 position="top-right"
