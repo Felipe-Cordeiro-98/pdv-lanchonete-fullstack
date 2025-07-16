@@ -1,22 +1,31 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import ProductFormPage from "../components/ProductFormPage";
+import ProductForm from "../components/ProductForm";
 import api from "../services/api";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function ProductCreate() {
     const navigate = useNavigate();
     const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        api.get("/categories")
-            .then((res) => setCategories(res.data))
-            .catch((err) => console.error("Erro ao carregar categorias", err));
+        fetchCategories();
     }, []);
 
-    const handleSave = async (data) => {
+    const fetchCategories = async () => {
         try {
-            await api.post("/products", {
+            const res = await api.get("categories");
+            setCategories(res.data);
+        } catch (error) {
+            console.error("Erro ao buscar categorias", error);
+        }
+    };
+
+    const handleSaveProduct = async (data) => {
+        setLoading(true);
+        try {
+            await api.post("products", {
                 name: data.name,
                 price: data.price,
                 stockQuantity: data.stockQuantity,
@@ -30,12 +39,14 @@ export default function ProductCreate() {
             toast.error("Erro ao cadastrar produto.", {
                 autoClose: 2000,
             });
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="container h-full">
-            <ProductFormPage title="Cadastrar Produto" categories={categories} handleForm={handleSave} />
+        <div className="h-full">
+            <ProductForm pageTitle="Cadastrar Produto" categories={categories} handleForm={handleSaveProduct} loading={loading} />
             <ToastContainer
                 position="top-right"
                 autoClose={3000}
