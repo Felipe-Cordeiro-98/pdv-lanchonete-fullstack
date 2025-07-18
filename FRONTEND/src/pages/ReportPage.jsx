@@ -7,8 +7,6 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    useMediaQuery,
-    useTheme,
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -17,6 +15,7 @@ import formatCurrency from "../utils/formatCurrency";
 import api from "../services/api";
 import { format, subDays } from "date-fns";
 import { useState } from "react";
+import useIsMobile from "../hooks/useIsMobile";
 
 export default function Report() {
     const [startDate, setStartDate] = useState(() => format(subDays(new Date(), 7), "yyyy-MM-dd"));
@@ -28,8 +27,7 @@ export default function Report() {
     const [totalSales, setTotalSales] = useState(0);
     const [averageValue, setAverageValue] = useState(0);
 
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+    const isMobile = useIsMobile();
 
     const fetchSales = async () => {
         setLoading(true);

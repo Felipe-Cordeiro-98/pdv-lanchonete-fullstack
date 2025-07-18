@@ -10,8 +10,6 @@ import {
     TablePagination,
     TableRow,
     Tooltip,
-    useMediaQuery,
-    useTheme,
 } from "@mui/material";
 
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
@@ -26,6 +24,7 @@ import api from "../services/api";
 import InfiniteScroll from "react-infinite-scroll-component";
 import CategoryCard from "../components/CategoryCard";
 import { toast, ToastContainer } from "react-toastify";
+import useIsMobile from "../hooks/useIsMobile";
 
 export default function CategoryPage() {
     const [searchInput, setSearchInput] = useState("");
@@ -46,8 +45,7 @@ export default function CategoryPage() {
     const [mobileCategories, setMobileCategories] = useState([]);
     const [hasMore, setHasMore] = useState(true);
 
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+    const isMobile = useIsMobile();
 
     useEffect(() => {
         if (isMobile) {

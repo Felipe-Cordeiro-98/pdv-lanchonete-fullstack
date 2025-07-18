@@ -1,8 +1,9 @@
-import { Button, useMediaQuery, useTheme } from "@mui/material";
+import { Button } from "@mui/material";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { useNavigate } from "react-router-dom";
+import useIsMobile from "../hooks/useIsMobile";
 
 const LabelRequired = ({ text, htmlFor }) => (
     <label htmlFor={htmlFor} className="text-[#6A6A6A]">
@@ -28,9 +29,7 @@ export default function ProductForm({ pageTitle, product, categories, handleForm
     });
 
     const navigate = useNavigate();
-
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+    const isMobile = useIsMobile();
 
     useEffect(() => {
         if (product) {

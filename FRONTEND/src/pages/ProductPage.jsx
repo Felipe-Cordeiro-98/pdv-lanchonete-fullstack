@@ -11,8 +11,6 @@ import {
     TablePagination,
     TableRow,
     Tooltip,
-    useMediaQuery,
-    useTheme,
 } from "@mui/material";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
@@ -25,6 +23,7 @@ import ProductCard from "../components/ProductCard";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ModalDelete from "../components/ModalDelete";
 import { toast, ToastContainer } from "react-toastify";
+import useIsMobile from "../hooks/useIsMobile";
 
 export default function ProductPage() {
     const [searchInput, setSearchInput] = useState("");
@@ -43,9 +42,7 @@ export default function ProductPage() {
     const [totalElementsPage, setTotalElementsPage] = useState(0);
 
     const navigate = useNavigate();
-
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+    const isMobile = useIsMobile();
 
     useEffect(() => {
         if (isMobile) {
